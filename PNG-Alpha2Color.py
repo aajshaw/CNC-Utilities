@@ -22,10 +22,11 @@ for x in range(image.width):
         print(f'.({percent}%)', end = '', flush = True)
     for y in range(image.height):
         pixel: float | tuple[int, ...] | None = image.getpixel((x, y))
-        if pixel[ALPHA] == 0:
-            image.putpixel((x, y), (255, 0, 0, 255)) # Full red
-        else:
-            image.putpixel((x, y), (0, 255, 0, pixel[ALPHA]))
+        if type(pixel) == tuple:
+            if pixel[ALPHA] == 0:
+                image.putpixel((x, y), (255, 0, 0, 255)) # Full red
+            else:
+                image.putpixel((x, y), (0, 255, 0, pixel[ALPHA]))
 print('.Done')
 
 def_output_file = path.splitext(png_imput_file)[0] + '_color.png'

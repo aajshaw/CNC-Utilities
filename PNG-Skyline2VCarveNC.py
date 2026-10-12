@@ -1,7 +1,7 @@
 from PIL import Image, ImageOps
 from PIL.Image import Resampling
 import PySimpleGUI as psg
-#import sys
+from psg_util import get_float_or_exit
 import os
 import WorkPiece
 from typing import NamedTuple
@@ -51,8 +51,6 @@ class Bit:
         return self.diameter / 2
 
 class VCutWorkDetail:
-#    ALPHA = 3
-
     def __init__(self,
                  image,
                  carve_width: float,
@@ -183,22 +181,6 @@ def pixel_to_height(pixel: Pixel) -> int:
     # If there is any alpha that is a CUT
     return pixel.alpha
 
-def get_float(text: str, default: str = '', min: float | None = None, max: float | None = None) -> float:
-    while True:
-        value = psg.popup_get_text(text, default_text = default)
-        if value is None:
-            exit()
-        try:
-            value = float(value)
-        except ValueError:
-            psg.popup_timed('Enter a floating point number', auto_close_duration = 5)
-            continue
-        if min and value < min:
-            psg.popup_timed(f'Value must be greater or equal to {min}', auto_close_duration = 5)
-        if max and value > max:
-            psg.popup_timed(f'Value must be less than or equal to {max}', auto_close_duration = 5)
-    return value
-
 print('Convert a skyline silhouette to NC')
 print('Size of workpiece should be a 16/9 ratio')
 
@@ -209,11 +191,11 @@ img.load()
 
 bit = Bit('20 degree V-bit', 0.5)
 
-carve_width = get_float('Carve width (x-axis mm)')
-carve_height = get_float('Carve height (y-axis mm)')
-z_feature_cut_depth = get_float('Z maximum cut depth for features (mm)', default = '5')
-feed_rate = get_float('Feed rate (mm per minute)', default = '300.0', min = 100.0, max = 750.0)
-fly_rate = get_float('Fly rate (mm per minute)', default = '1500.0', min = 300.0, max = 2000.0)
+carve_width = get_float_or_exit('Carve width (x-axis mm)')
+carve_height = get_float_or_exit('Carve height (y-axis mm)')
+z_feature_cut_depth = get_float_or_exit('Z maximum cut depth for features (mm)', default = '5')
+feed_rate = get_float_or_exit('Feed rate (mm per minute)', default = '300.0', min = 100.0, max = 750.0)
+fly_rate = get_float_or_exit('Fly rate (mm per minute)', default = '1500.0', min = 300.0, max = 2000.0)
 
 work_detail = VCutWorkDetail(img,
                              carve_width,

@@ -1,5 +1,6 @@
 from PIL import Image
 import PySimpleGUI as psg
+from psg_util import get_int_or_exit
 from os import path
 from math import sqrt, pi, sin
 from operator import itemgetter
@@ -18,18 +19,6 @@ class Pixel(NamedTuple):
     green: int
     blue: int
     alpha: int
-
-def get_int(text: str, default: str = '') -> int:
-    while True:
-        value = psg.popup_get_text(text, default_text = default)
-        if value is None:
-            exit()
-        try:
-            value = int(value)
-            break
-        except ValueError:
-            psg.popup_timed('Enter an integer number', auto_close_duration = 5    )
-    return value
 
 def make_distance_list(limit: int) -> list[Distance]:
     distances = []
@@ -68,11 +57,11 @@ def nearest_not_blue(bitmap: list[list[Pixel]], distances: list[Distance], x: in
 
     return limit
 
-green_range: int = get_int('Enter range for searching from a green pixel', default = '100')
+green_range: int = get_int_or_exit('Enter range for searching from a green pixel', default = '100')
 
 from_green_distances = make_distance_list(green_range)
 
-blue_range: int = get_int('Enter range for searching from a blue pixel', default = '100')
+blue_range: int = get_int_or_exit('Enter range for searching from a blue pixel', default = '100')
 
 from_blue_distances = make_distance_list(blue_range)
 

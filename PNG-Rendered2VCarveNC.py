@@ -1,6 +1,7 @@
 from PIL import Image, ImageOps
 from PIL.Image import Resampling
 import PySimpleGUI as psg
+from psg_util import get_float_or_exit
 import WorkPiece
 from sys import exit
 import os
@@ -167,38 +168,21 @@ def pixel_to_height(pixel: Pixel) -> int:
     # return same height as red or blue
     return 0
 
-def get_float(text: str, default: str = '', min: float | None = None, max: float | None = None) -> float:
-    while True:
-        value = psg.popup_get_text(text, default_text = default)
-        if value is None:
-            exit()
-        try:
-            value = float(value)
-#            break
-        except ValueError:
-            psg.popup_timed('Enter a floating point number', auto_close_duration = 5)
-            continue
-        if min and value < min:
-            psg.popup_timed(f'Value must be greater or equal to {min}', auto_close_duration = 5)
-        if max and value > max:
-            psg.popup_timed(f'Value must be less than or equal to {max}', auto_close_duration = 5)
-    return value
-
 png_file = psg.popup_get_file('Select contour rendered file', file_types = (('PNG Files', '*.png'),))
 
 image = Image.open(png_file)
 image.load()
 bit = Bit('20 degree V-bit', 0.5)
 
-carve_width = get_float('Carve width (x-axis mm)')
-carve_height = get_float('Carve height (y-axis mm)')
+carve_width = get_float_or_exit('Carve width (x-axis mm)')
+carve_height = get_float_or_exit('Carve height (y-axis mm)')
 
-z_max_depth = get_float('Z maximum cut depth for features (mm)', default = '3', min = 1, max = 3)
+z_max_depth = get_float_or_exit('Z maximum cut depth for features (mm)', default = '3', min = 1, max = 3)
 
-carve_track_width = get_float('Track carve width (mm)', default = '0.2', min = 0.1, max = 1)
+carve_track_width = get_float_or_exit('Track carve width (mm)', default = '0.2', min = 0.1, max = 1)
 
-feed_rate = get_float('Feed rate (mm per minute)', default = '300.0', min = 100.0, max = 750.0)
-#work_detail = VCutWorkDetail(image, carve_width, carve_height, bit, 0.2, 3.0)
+feed_rate = get_float_or_exit('Feed rate (mm per minute)', default = '300.0', min = 100.0, max = 750.0)
+
 work_detail = VCutWorkDetail(image,
                              carve_width,
                              carve_height,

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 
 MM = 0
 INCHES = 1
@@ -13,7 +13,6 @@ def _unit_size(size: float, units: int) -> str:
         value += '???'
 
     return value
-
 
 class Bit():
     def __init__(self, type: str = 'double flute straight end mill', diameter: float = 3.175, units: str = 'mm'):
@@ -100,9 +99,9 @@ class WorkPiece():
         lines.append('; Trailer')
         lines += self.gcode_safe_z()
         lines.append('G0 X0 Y0 ; home')
-#        lines.append('G4 P100 ; pause ')
+        lines.append('G4 P1 ; pause ')
         lines.append('M5 ; spindle stop')
-#        lines.append('G4 P100 ; pause ')
+        lines.append('G4 P1 ; pause ')
 
         return lines
 
@@ -131,18 +130,11 @@ class WorkPiece():
         lines = []
 
         if x is not None or y is not None:
-#            line = 'G1'
             line = ''
             if x is not None:
-#                line += f' X{x:.3f}'
                 self.x = x
             if y is not None:
-#                line += f' Y{y:.3f}'
                 self.y = y
-#            if flying:
-#                line += f' F{self.fly_rate}'
-#            else:
-#                line += f' F{self.feed_rate}'
             if comment is not None:
                 line += f'; {comment}'
             if line != '':
