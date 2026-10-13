@@ -3,7 +3,6 @@ from PIL.Image import Resampling
 import PySimpleGUI as psg
 from psg_util import get_float_or_exit
 import WorkPiece
-from sys import exit
 import os
 from typing import NamedTuple
 
@@ -79,7 +78,6 @@ class VCutWorkDetail:
         self.work_image = ImageOps.flip(self.work_image)
 
         self.mm_per_pixel = self.carve_width / self.work_image.width
-#        print(f'{self.image.width = } {self.image.height = } {self.work_image.width = } {self.work_image.height = } {self.mm_per_pixel = }')
 
         self.contours: list[ContourLine] = []
 
@@ -102,7 +100,6 @@ class VCutWorkDetail:
             else:
                 # process the last one
                 contour_line.append(start_x, x - start_x, cur_height) # type: ignore
-        print(f'{self.contours[0][0] = }')
 
     def generate_gcode(self)-> None:
         work = WorkPiece.WorkPiece('Rendered2NC.nc',
@@ -164,14 +161,14 @@ def pixel_to_height(pixel: Pixel) -> int:
     elif pixel.blue:
         return pixel.blue
 
-    # zero on the green channel is 'black', so not green.
-    # return same height as red or blue
+    # zero on the measured channels is 'black', so return zero
     return 0
 
 png_file = psg.popup_get_file('Select contour rendered file', file_types = (('PNG Files', '*.png'),))
 
 image = Image.open(png_file)
 image.load()
+
 bit = Bit('20 degree V-bit', 0.5)
 
 carve_width = get_float_or_exit('Carve width (x-axis mm)')

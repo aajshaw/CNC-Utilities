@@ -4,8 +4,16 @@ from sys import exit
 import PySimpleGUI as psg
 
 def get_float(text: str, default: str = '', min: float | None = None, max: float | None = None, return_no_value: bool = False) -> float | None:
+    prompt = text
+    if min or max:
+        if min and not max:
+            prompt += f' (>= {min})'
+        elif min and max:
+            prompt += f' ({min} - {max})'
+        elif max and not min:
+            prompt += f' (<= {max})'
     while True:
-        value = psg.popup_get_text(text, default_text = default)
+        value = psg.popup_get_text(prompt, default_text = default)
         if value is None:
             if return_no_value:
                 return value
@@ -31,8 +39,16 @@ def get_float_or_exit(text: str, default: str = '', min: float | None = None, ma
         return value
 
 def get_int(text: str, default: str = '', min: int | None = None, max: int | None = None, return_no_value: bool = False) -> int | None:
+    prompt = text
+    if min or max:
+        if min and not max:
+            prompt += f' (>= {min})'
+        elif min and max:
+            prompt += f' ({min} - {max})'
+        elif max and not min:
+            prompt += f' (<= {max})'
     while True:
-        value = psg.popup_get_text(text, default_text = default)
+        value = psg.popup_get_text(prompt, default_text = default)
         if value is None:
             if return_no_value:
                 return
