@@ -21,10 +21,10 @@ print(f'; ShiftOrigin processed {nc_input_file} X offset: {x_offset} Y offset: {
 
 for line in parse_gcode_lines(nc_input, include_comments = True):
     x = line.get_param('X')
-    if x and type(x) == int:
+    if x and (type(x) == float or type(x) == int):
         line.update_param('X', x - x_offset)
     y = line.get_param('Y')
-    if y and type(y) == int:
+    if y and (type(y) == float or type(y) == int):
         line.update_param('Y', y - y_offset)
     print(line.gcode_str, file = nc_output)
 
