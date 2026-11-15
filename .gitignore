@@ -3,4 +3,6 @@
 \lib
 \scripts
 \__pycache__
+\share
 pyvenv.cfg
+*.nc
