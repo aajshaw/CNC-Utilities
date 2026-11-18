@@ -1,2 +1,2 @@
 # CNC-Utilities
-Python scripts to generate gcode from bitmaps
+Python scripts to generate gcode from bitmaps and SVG
